@@ -1,4 +1,5 @@
 #pragma config(Sensor, dgtl4,  bottom,         sensorTouch)
+#pragma config(Sensor, dgtl1,  top,            sensorTouch)
 #pragma config(Sensor, dgtl9,  encoderA,       sensorQuadEncoder)
 #pragma config(Motor,  port1,           left_motor,    tmotorVex393_HBridge, openLoop)
 #pragma config(Motor,  port10,          right_motor,   tmotorVex393_HBridge, openLoop)
@@ -16,11 +17,19 @@ const float SPROCKET_CIRCUMFERENCE = SPROCKET_DIAMETER * 3.1415;
 
 // inches
 const float BOTTOM_HEIGHT = 4;
-const float TOP_HEIGHT = 25.5;
+const float TOP_HEIGHT = 25.5 - 0.5;
 
 void set(float speed) {
-	motor[left_motor] = -speed;
-	motor[right_motor] = speed;
+	if (SensorValue[top] && speed > 0) {
+		set(0);
+	}
+	else if (SensorValue[bottom] && speed < 0) {
+		set(0);
+	}
+	else {
+		motor[left_motor] = -speed;
+		motor[right_motor] = speed;
+	}
 }
 
 float getHeight() {
@@ -65,6 +74,10 @@ task main()
 	while (1) {
 		if (SensorValue[bottom]) {
 			SensorValue[encoderA] = 0;
+		}
+
+		if (SensorValue[top]) {
+			SensorValue[encoderA] = TOP_HEIGHT;
 		}
 
 		setTargetHeight(t);
