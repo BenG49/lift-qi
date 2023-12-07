@@ -6,4 +6,17 @@ float MAX_ACCEL, MAX_VEL;
 
 typedef
 
-float getSetpoint(float *outputPosition, float *outputVelocity, float currentPosition, float currentVelocity, float )
+float getSetpoint(float *outputPosition, float *outputVelocity, float currentPosition, float currentVelocity, float elapsed_time) {
+	float accel_time = MAX_ACCEL / MAX_VEL;
+
+	float distance = outputPosition - currentPosition
+
+	float halfway_distance = distance / 2;
+
+	float accel_distance = currentVelocity * accel_time + 0.5 * accel_time ** 2;
+
+
+	// d = vit + 0.5at^2
+	// vf - vi = at
+
+}

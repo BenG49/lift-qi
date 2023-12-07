@@ -9,6 +9,7 @@ float getTimeSec() {
 	return time1[T1] / 1000.0;
 }
 
+
 // motor + encoder
 
 // inches
@@ -77,7 +78,7 @@ task main()
 		}
 
 		if (SensorValue[top]) {
-			SensorValue[encoderA] = TOP_HEIGHT;
+			SensorValue[encoderA] = TOP_HEIGHT; // Isnt top height in inches so this wont convert properly right?
 		}
 
 		setTargetHeight(t);
