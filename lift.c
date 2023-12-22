@@ -19,7 +19,17 @@ const float SPROCKET_CIRCUMFERENCE = SPROCKET_DIAMETER * 3.1415;
 
 // inches
 const float BOTTOM_HEIGHT = 4;
-const float TOP_HEIGHT = 25.5 - 0.5;
+
+
+float encoderToReal(float encoderUnits) {
+	return BOTTOM_HEIGHT + encoderUnits / 360.0 * SPROCKET_CIRCUMFERENCE * 2;
+}
+
+float realToEncoder(float inches) {
+	 return inches / SPROCKET_CIRCUMFERENCE / 2 * 360.0 - BOTTOM_HEIGHT;
+}
+
+const float TOP_HEIGHT = realToEncoder(770);
 
 void set(float speed) {
 	if (SensorValue[top] && speed > 0) {
@@ -29,20 +39,20 @@ void set(float speed) {
 		set(0);
 	}
 	else {
-		motor[left_motor] = -speed;
+		motor[left_motor] = speed;
 		motor[right_motor] = speed;
 	}
 }
 
 float getHeight() {
-	return BOTTOM_HEIGHT + SensorValue[encoderA] / 360.0 * SPROCKET_CIRCUMFERENCE * 2;
+	return encoderToReal(SensorValue[encoderA]);
 }
 
 // control loop
 
 float kP = 50;
 float kG = 20;
-const float kS = 0;
+const float kS = 20;
 
 float getVoltage(float target, float measurement) {
 	float error = target - measurement;
@@ -70,17 +80,13 @@ void setTargetHeight(float height) {
 
 float h;
 float t = BOTTOM_HEIGHT;
-float S = 0;
+//float S = 0;
 
 task main()
 {
 	while (1) {
 		if (SensorValue[bottom]) {
-			SensorValue[encoderA] = 0;
-		}
-
-		if (SensorValue[top]) {
-			SensorValue[encoderA] = TOP_HEIGHT / SPROCKET_CIRCUMFERENCE / 2 * 360.0 - BOTTOM_HEIGHT;
+			 SensorValue[encoderA] = 0;
 		}
 
 		setTargetHeight(t);
@@ -88,6 +94,6 @@ task main()
 		h = getHeight();
 
 		set(getVoltage(targetHeight, getHeight()));
-		// set(S);
+		//set(sgn(S) * kS);
 	}
 }
