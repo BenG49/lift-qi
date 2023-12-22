@@ -87,7 +87,7 @@ task main()
 
 		h = getHeight();
 
-		// set(getVoltage(targetHeight, getHeight()));
-		set(S);
+		set(getVoltage(targetHeight, getHeight()));
+		// set(S);
 	}
 }
